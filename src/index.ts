@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-import express, { Application, Express, Request, Response } from "express";
+import express from "express";
 import { connect } from "./config/database.config";
 import env from "./config/environment.config";
 import { ApolloServer } from "apollo-server-express";
-import { resolvers } from "./resolvers";
+import { resolvers } from "./resolvers/index.resolver";
 import { typeDefs } from "./typeDefs/index.typeDefs";
 const app = express() as any;
 const port: number = parseInt(env.PORT as string);
@@ -18,7 +18,10 @@ const startServer = (): void => {
   app.use(express.urlencoded({ extended: true }));
   try {
     ///graphQl
-    const apolloServer = new ApolloServer({ typeDefs: typeDefs, resolvers });
+    const apolloServer = new ApolloServer({
+      typeDefs: typeDefs,
+      resolvers: resolvers,
+    });
     await apolloServer.start();
     apolloServer.applyMiddleware({ app: app, path: "/graphql" });
     console.log("Connecting to database...");
