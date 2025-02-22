@@ -1,5 +1,5 @@
 import { gql } from "apollo-server-express";
-export const typeDefs = gql`
+export const typeDefsArticle = gql`
   type Article {
     id: String
     title: String
