@@ -1,5 +1,4 @@
 import { gql } from "apollo-server-express";
-import { IUser } from "../models/user.model";
 export const typeDefsUser = gql`
   type IUser {
     id: String
@@ -22,7 +21,7 @@ export const typeDefsUser = gql`
       filterValue: String
       keyword: String
     ): [IUser]
-    getUser(id: String): IUser
+    getUser: IUser
   }
   input RegisterUserInput {
     avatar: String

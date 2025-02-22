@@ -34,6 +34,24 @@ export const resolverUser = {
         .limit(limitItems);
       return users;
     },
+    getUser: async (_: any, args: any, context: any) => {
+      const user = await User.findOne({
+        token: context.user.token,
+        deleted: false,
+      }).select("-password");
+      if (!user) {
+        throw new Error("Không tìm thấy user");
+      }
+      return {
+        code: 200,
+        message: "Lấy thông tin thành công",
+        username: user.username,
+        email: user.email,
+        avatar: user.avatar,
+        token: user.token,
+        id: user._id,
+      };
+    },
   },
   Mutation: {
     createUser: async (_: any, args: { user: IUser }) => {
@@ -76,19 +94,5 @@ export const resolverUser = {
         id: isEmail._id,
       };
     },
-    // deleteArticle: async (_: any, args: any): Promise<string> => {
-    //   const { id } = args;
-    //   await Article.updateOne(
-    //     { _id: id },
-    //     { deleted: true, deletedAt: new Date() }
-    //   );
-    //   return "Đã xóa";
-    // },
-    // updateArticle: async (_: any, args: any) => {
-    //   const { id, article } = args;
-    //   await Article.updateOne({ _id: id }, article);
-    //   const record = await Article.findOne({ _id: id });
-    //   return record;
-    // },
   },
 };

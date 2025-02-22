@@ -5,6 +5,7 @@ import env from "./config/environment.config";
 import { ApolloServer } from "apollo-server-express";
 import { resolvers } from "./resolvers/index.resolver";
 import { typeDefs } from "./typeDefs/index.typeDefs";
+import { reqAuth } from "./middleware/auth.middleware";
 const app = express() as any;
 const port: number = parseInt(env.PORT as string);
 const startServer = (): void => {
@@ -16,11 +17,13 @@ const startServer = (): void => {
 (async (): Promise<void> => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use("/graphql", reqAuth);
   try {
     ///graphQl
     const apolloServer = new ApolloServer({
       typeDefs: typeDefs,
       resolvers: resolvers,
+      context: ({ req }) => ({ ...req }),
     });
     await apolloServer.start();
     apolloServer.applyMiddleware({ app: app, path: "/graphql" });
