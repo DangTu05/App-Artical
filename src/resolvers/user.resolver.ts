@@ -56,6 +56,26 @@ export const resolverUser = {
         id: newUser._id,
       };
     },
+    loginUser: async (_: any, args: { user: IUser }) => {
+      const { user } = args;
+      const { email, password } = user;
+      const isEmail = await User.findOne({ email: email, deleted: false });
+      if (!isEmail) {
+        throw new Error("Email không tồn tại");
+      }
+      if (md5(password) !== isEmail.password) {
+        throw new Error("Mật khẩu không chính xác");
+      }
+      return {
+        code: 200,
+        message: "Đăng nhập thành công",
+        username: isEmail.username,
+        email: isEmail.email,
+        avatar: isEmail.avatar,
+        token: isEmail.token,
+        id: isEmail._id,
+      };
+    },
     // deleteArticle: async (_: any, args: any): Promise<string> => {
     //   const { id } = args;
     //   await Article.updateOne(
