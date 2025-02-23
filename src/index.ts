@@ -23,6 +23,7 @@ const startServer = (): void => {
     const apolloServer = new ApolloServer({
       typeDefs: typeDefs,
       resolvers: resolvers,
+      introspection: true,
       context: ({ req }) => ({ ...req }),
     });
     await apolloServer.start();
